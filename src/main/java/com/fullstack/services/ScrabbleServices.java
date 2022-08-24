@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 public class ScrabbleServices {
-
     public static List<Character> generateLetters(int numberOfLetters) {
         List<Character> letArr = new ArrayList<>();
         Random r = new Random();
@@ -36,18 +35,19 @@ public class ScrabbleServices {
             score += mapLettersScore.get(letter);
         }
 
+        // Return total score of a word
         return score;
     }
     public static String calculateScore (String wordList){
+        // Iterate each word and calculate each score
         String[] wordListParsed = wordList.split(",");
         int totalScore = 0;
         for (String word: wordListParsed) {
             totalScore += calculateScoreSingleWord(word);
         }
 
+        // Return a string with the total score of every word
         return "" + totalScore;
     }
-
-
 
 }

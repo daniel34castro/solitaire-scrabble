@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/scrabbleController")
@@ -26,16 +24,5 @@ public class ScrabbleController {
         return score;
     }
 
-
-    @GetMapping("/validateWord")
-    public String validateWord() {
-
-        final String uri = "https://api.dictionaryapi.dev/api/v2/entries/en/bird" ;
-
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
-        return result;
-
-    }
 
 }

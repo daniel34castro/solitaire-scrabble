@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed,  onMounted} from 'vue'
+const pageIndexController = ref(1)
 let countDown = ref(40)
 const letters = ref([])
 const newWord = ref('')
@@ -9,6 +10,10 @@ const score = ref ('');
 
 const reloadPage = () => {
       window.location.reload();
+}
+
+const switchPage = (pageIndex) =>{
+  pageIndexController.value =pageIndex
 }
 
 const checkWordValidity = computed(() =>{
@@ -50,19 +55,21 @@ const submitWord = () =>{
     }
   });
 }
-
 const submitGame = () =>{
+  // Get div from last page
+  switchPage(3)
+
+  // If no words were submitted give score 0 right away
   if (wordsSubmitted.value.length ==0 ) {
     score.value = "0";
     return;
   }
 
-
+  // post words to backend and obtain total score
   const wordsList = wordsSubmitted.value.map(a => a.word);
-
   const requestOptions = {
       method: "POST",
-      body: wordsList
+      body: wordsList //word1, word2
     };
     fetch("/api/scrabbleController/postScore", requestOptions)
       .then((response) => response.text())
@@ -90,20 +97,27 @@ onMounted( ()=>{
     letters.value = JSON.parse(data);
   });
   
-
-  countDownTimer()
 })
 
 </script>
 
 <template>
-  <h1>Solitaire Scrabble </h1>
-  <button class="btn btn-primary" @click="reloadPage">New Game</button>
+  <h1>Solitaire Scrabble</h1>
+
+  <div v-if="pageIndexController == 1">
+  <h2>Welcome!</h2>
+  <u>Rules:</u>
+  <p>Use only the letters that were given to you</p>
+  <p>Write words in English</p>
+  <p>Submit as many words as you can before you run out time</p>
+  <p>The score will be calculated after the game finished</p>
+  <p>Good Luck!</p>
+  <button class="btn btn-primary" @click="switchPage(2);countDownTimer()">Start Game</button>
   <br><br>
-  
+  </div>
 
 
-  <div v-if="countDown > 0">
+  <div v-if="pageIndexController == 2">
   <!-- Clock -->
   <div style="border: solid; border-radius: 50%; padding: 15px ;  display: inline-block;">{{countDown}}</div>
   <br><br>
@@ -132,22 +146,14 @@ onMounted( ()=>{
   </div>
 
 
-  <div v-if="countDown <= 0">
+  <div v-if="pageIndexController == 3">
     <h1>Game Over</h1>
-    <h1>Your score is {{score}}</h1>
+    <h2>Your score is {{score}}</h2>
+    <button class="btn btn-primary" @click="reloadPage">New Game</button>
   </div>
   
 
-
-
-  
-
-
-
-
 </template>
-
-
 
 
 
